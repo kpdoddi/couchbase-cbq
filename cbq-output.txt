@@ -1,0 +1,282 @@
+C:\Users\kdodd\Documents\Couchbase> java -jar .\cbq.jar
+Apr 19, 2017 6:40:50 PM com.couchbase.client.core.CouchbaseCore <init>
+INFO: CouchbaseEnvironment: {sslEnabled=false, sslKeystoreFile='null', sslKeystorePassword='null', queryEnabled=false, q
+ueryPort=8093, bootstrapHttpEnabled=true, bootstrapCarrierEnabled=true, bootstrapHttpDirectPort=8091, bootstrapHttpSslPo
+rt=18091, bootstrapCarrierDirectPort=11210, bootstrapCarrierSslPort=11207, ioPoolSize=8, computationPoolSize=8, response
+BufferSize=16384, requestBufferSize=16384, kvServiceEndpoints=1, viewServiceEndpoints=1, queryServiceEndpoints=1, search
+ServiceEndpoints=1, ioPool=NioEventLoopGroup, coreScheduler=CoreScheduler, eventBus=DefaultEventBus, packageNameAndVersi
+on=couchbase-java-client/2.2.8 (git: 2.2.8, core: 1.2.9), dcpEnabled=false, retryStrategy=BestEffort, maxRequestLifetime
+=75000, retryDelay=ExponentialDelay{growBy 1.0 MICROSECONDS, powers of 2; lower=100, upper=100000}, reconnectDelay=Expon
+entialDelay{growBy 1.0 MILLISECONDS, powers of 2; lower=32, upper=4096}, observeIntervalDelay=ExponentialDelay{growBy 1.
+0 MICROSECONDS, powers of 2; lower=10, upper=100000}, keepAliveInterval=30000, autoreleaseAfter=2000, bufferPoolingEnabl
+ed=true, tcpNodelayEnabled=true, mutationTokensEnabled=false, socketConnectTimeout=1000, dcpConnectionBufferSize=2097152
+0, dcpConnectionBufferAckThreshold=0.2, dcpConnectionName=dcp/core-io, callbacksOnIoPool=false, queryTimeout=75000, view
+Timeout=75000, kvTimeout=2500, connectTimeout=5000, disconnectTimeout=25000, dnsSrvEnabled=false}
+Opened cluster
+Apr 19, 2017 6:40:51 PM com.couchbase.client.core.node.CouchbaseNode signalConnected
+INFO: Connected to Node localhost
+Apr 19, 2017 6:40:51 PM com.couchbase.client.core.config.DefaultConfigurationProvider$8 call
+INFO: Opened bucket travel-sample
+Opened bucket
+
+ Welcome to Couchbase Interactive Query Tool.
+ Note: You can split your N1QL by whitespace or newlines, but has to terminate with ;
+ Note: You can specify the output format of the query as either Row or Json
+ Note: Please use backticks if you have any hyphens. Example: select * from `travel-sample` limit 10
+ At prompt Enter: N1QL query || --json/--row || --quit
+
+ cbq>select * from `travel-sample` limit 2;
+ select * from `travel-sample` limit 2;
+Elapsed: 11.1682ms Execution: 11.0294ms Result Count: 2 Result Size: 598
+{"travel-sample":{"country":"United States","iata":"Q5","callsign":"MILE-AIR","name":"40-Mile Air","icao":"MLA","id":10,
+"type":"airline"}}
+{"travel-sample":{"country":"United States","iata":"TQ","callsign":"TXW","name":"Texas Wings","icao":"TXW","id":10123,"type":"airline"}}
+
+cbq>--json
+Set output to JSON format
+
+cbq>select * from `travel-sample` limit 2;
+ select * from `travel-sample` limit 2;
+Elapsed: 13.8684ms Execution: 13.8267ms Result Count: 2 Result Size: 598
+{
+  "travel-sample" : {
+    "country" : "United States",
+    "iata" : "Q5",
+    "callsign" : "MILE-AIR",
+    "name" : "40-Mile Air",
+    "icao" : "MLA",
+    "id" : 10,
+    "type" : "airline"
+  }
+}
+{
+  "travel-sample" : {
+    "country" : "United States",
+    "iata" : "TQ",
+    "callsign" : "TXW",
+    "name" : "Texas Wings",
+    "icao" : "TXW",
+    "id" : 10123,
+    "type" : "airline"
+  }
+}
+
+cbq>select count(*) from `travel-sample`;
+ select count(*) from `travel-sample`;
+Elapsed: 10.7237ms Execution: 10.6808ms Result Count: 1 Result Size: 35
+{
+  "$1" : 31591
+}
+
+cbq>select count(*) as count from `travel-sample`;
+ select count(*) as count from `travel-sample`;
+Elapsed: 9.0572ms Execution: 9.0172ms Result Count: 1 Result Size: 38
+{
+  "count" : 31591
+}
+
+cbq>SELECT a.name, s.flight, s.utc, r.sourceairport, r.destinationairport, r.equipment
+cbq>FROM `travel-sample` AS r
+cbq>UNNEST r.schedule AS s
+cbq>JOIN `travel-sample` AS a ON KEYS r.airlineid
+cbq>WHERE r.sourceairport = "LAX" AND r.destinationairport = "SFO" AND s.day = 6
+cbq>ORDER BY a.name ASC
+cbq>;
+ SELECT a.name, s.flight, s.utc, r.sourceairport, r.destinationairport, r.equipment FROM `travel-sample` AS r UNNEST r.s
+chedule AS s JOIN `travel-sample` AS a ON KEYS r.airlineid WHERE r.sourceairport = "LAX" AND r.destinationairport = "SFO
+" AND s.day = 6 ORDER BY a.name ASC ;
+Elapsed: 329.4874ms Execution: 329.4419ms Result Count: 22 Result Size: 4897
+{
+  "name" : "American Airlines",
+  "flight" : "AA516",
+  "equipment" : "738",
+  "utc" : "18:57:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "American Airlines",
+  "flight" : "AA691",
+  "equipment" : "738",
+  "utc" : "15:36:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "American Airlines",
+  "flight" : "AA031",
+  "equipment" : "738",
+  "utc" : "22:20:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "American Airlines",
+  "flight" : "AA407",
+  "equipment" : "738",
+  "utc" : "00:37:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Delta Air Lines",
+  "flight" : "DL066",
+  "equipment" : "E75",
+  "utc" : "08:58:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Delta Air Lines",
+  "flight" : "DL493",
+  "equipment" : "E75",
+  "utc" : "16:11:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Delta Air Lines",
+  "flight" : "DL771",
+  "equipment" : "E75",
+  "utc" : "04:17:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Delta Air Lines",
+  "flight" : "DL753",
+  "equipment" : "E75",
+  "utc" : "20:44:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Delta Air Lines",
+  "flight" : "DL893",
+  "equipment" : "E75",
+  "utc" : "00:19:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Southwest Airlines",
+  "flight" : "WN485",
+  "equipment" : "73W 73C 733",
+  "utc" : "09:37:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Southwest Airlines",
+  "flight" : "WN074",
+  "equipment" : "73W 73C 733",
+  "utc" : "15:45:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "US Airways",
+  "flight" : "US746",
+  "equipment" : "738",
+  "utc" : "22:48:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "US Airways",
+  "flight" : "US078",
+  "equipment" : "738",
+  "utc" : "15:11:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "US Airways",
+  "flight" : "US654",
+  "equipment" : "738",
+  "utc" : "01:59:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "US Airways",
+  "flight" : "US678",
+  "equipment" : "738",
+  "utc" : "00:13:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "US Airways",
+  "flight" : "US505",
+  "equipment" : "738",
+  "utc" : "19:53:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "United Airlines",
+  "flight" : "UA819",
+  "equipment" : "739 752 753 319 320 738",
+  "utc" : "06:07:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "United Airlines",
+  "flight" : "UA462",
+  "equipment" : "739 752 753 319 320 738",
+  "utc" : "11:01:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Virgin America",
+  "flight" : "VX097",
+  "equipment" : "320 319",
+  "utc" : "12:32:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Virgin America",
+  "flight" : "VX617",
+  "equipment" : "320 319",
+  "utc" : "12:42:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Virgin America",
+  "flight" : "VX041",
+  "equipment" : "320 319",
+  "utc" : "07:25:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+{
+  "name" : "Virgin America",
+  "flight" : "VX411",
+  "equipment" : "320 319",
+  "utc" : "08:26:00",
+  "sourceairport" : "LAX",
+  "destinationairport" : "SFO"
+}
+
+cbq>--quit
+Apr 19, 2017 6:47:52 PM com.couchbase.client.core.config.DefaultConfigurationProvider$11 call
+INFO: Closed bucket travel-sample
+Apr 19, 2017 6:47:52 PM com.couchbase.client.core.node.CouchbaseNode signalDisconnected
+INFO: Disconnected from Node localhost
+Apr 19, 2017 6:47:52 PM com.couchbase.client.core.env.DefaultCoreEnvironment$4 call
+INFO: Shutdown Core Scheduler: success
+Apr 19, 2017 6:47:52 PM com.couchbase.client.core.env.DefaultCoreEnvironment$4 call
+INFO: Shutdown IoPool: success
+Apr 19, 2017 6:47:52 PM com.couchbase.client.core.env.DefaultCoreEnvironment$4 call
+INFO: Shutdown Runtime Metrics Collector: success
+Apr 19, 2017 6:47:52 PM com.couchbase.client.core.env.DefaultCoreEnvironment$4 call
+INFO: Shutdown Latency Metrics Collector: success
+Apr 19, 2017 6:47:53 PM com.couchbase.client.core.env.DefaultCoreEnvironment$4 call
+INFO: Shutdown Netty: success
+
+PS C:\Users\kdodd\Documents\Couchbase>
