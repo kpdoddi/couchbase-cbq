@@ -19,7 +19,7 @@ import com.couchbase.client.java.transcoder.JacksonTransformers;
  *
  */
 public final class Pprint {
-	public static int ppType = 0; // This will be set by the user to either 0-ROW or 1-JSON from the interactive tool
+	public static int ppType = 1; // This will be set by the user to either 0-ROW or 1-JSON from the interactive tool
 
 	/**
 	 * This function expects a non-null result object. We have taken care of this elsewhere.
@@ -34,7 +34,7 @@ public final class Pprint {
 		/*
 		 * Lets print out the result information first
 		 */
-		System.out.println("Elapsed: " +  result.info().elapsedTime() + 
+		System.out.println("    Elapsed: " +  result.info().elapsedTime() + 
 				" Execution: " + result.info().executionTime() + 
 				" Result Count: " + result.info().resultCount() + 
 				" Result Size: " + result.info().resultSize());
